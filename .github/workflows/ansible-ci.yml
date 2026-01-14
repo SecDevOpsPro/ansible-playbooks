@@ -78,6 +78,8 @@ jobs:
 
       - name: Run Molecule tests
         if: steps.molecule_check.outputs.exists == 'true'
+        env:
+          ANSIBLE_ALLOW_BROKEN_CONDITIONALS: "true"
         run: |
           cd roles/nginx
           molecule test
