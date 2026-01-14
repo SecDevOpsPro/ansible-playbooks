@@ -1,0 +1,13 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    nginx_worker_processes: 2
+    nginx_worker_connections: 1024
+    nginx_keepalive_timeout: 65
+    nginx_enable_ssl: false
+
+  roles:
+    - role: nginx

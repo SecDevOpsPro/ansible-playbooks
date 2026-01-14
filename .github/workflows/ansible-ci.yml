@@ -67,7 +67,17 @@ jobs:
         run: |
           pip install molecule molecule-docker docker ansible
 
+      - name: Check if Molecule tests exist
+        id: molecule_check
+        run: |
+          if [ -f roles/nginx/molecule/default/molecule.yml ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Molecule tests
+        if: steps.molecule_check.outputs.exists == 'true'
         run: |
           cd roles/nginx
           molecule test

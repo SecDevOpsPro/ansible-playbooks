@@ -1,0 +1,51 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Check if NGINX is installed
+      ansible.builtin.command: nginx -v
+      register: nginx_version
+      changed_when: false
+      failed_when: false
+
+    - name: Verify NGINX is installed
+      ansible.builtin.assert:
+        that:
+          - nginx_version.rc == 0
+        fail_msg: "NGINX is not installed"
+        success_msg: "NGINX is installed"
+
+    - name: Check if NGINX service is running
+      ansible.builtin.service:
+        name: nginx
+        state: started
+      check_mode: true
+      register: nginx_service
+
+    - name: Verify NGINX service is running
+      ansible.builtin.assert:
+        that:
+          - nginx_service.changed == false
+        fail_msg: "NGINX service is not running"
+        success_msg: "NGINX service is running"
+
+    - name: Test NGINX responds to HTTP requests
+      ansible.builtin.uri:
+        url: http://localhost
+        status_code: 200
+      register: nginx_response
+      retries: 3
+      delay: 2
+      until: nginx_response.status == 200
+
+    - name: Verify NGINX configuration is valid
+      ansible.builtin.command: nginx -t
+      changed_when: false
+      register: nginx_config_test
+
+    - name: Display NGINX config test result
+      ansible.builtin.debug:
+        var: nginx_config_test.stderr_lines
