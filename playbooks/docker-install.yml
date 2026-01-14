@@ -23,7 +23,7 @@
 
   pre_tasks:
     - name: Check if running on supported OS
-      fail:
+      ansible.builtin.fail:
         msg: "This playbook only supports Ubuntu, Debian, CentOS, and RHEL"
       when: ansible_os_family not in ['Debian', 'RedHat']
 
@@ -33,7 +33,7 @@
 
   tasks:
     - name: Install Docker SDK for Python
-      pip:
+      ansible.builtin.pip:
         name:
           - docker
           - docker-compose
@@ -41,30 +41,30 @@
         executable: pip3
 
     - name: Add users to docker group
-      user:
+      ansible.builtin.user:
         name: "{{ item }}"
         groups: docker
-        append: yes
+        append: true
       loop: "{{ docker_users }}"
       when: docker_users is defined
 
     - name: Create Docker daemon configuration
-      copy:
+      ansible.builtin.copy:
         content: "{{ docker_daemon_options | to_nice_json }}"
         dest: /etc/docker/daemon.json
         owner: root
         group: root
         mode: '0644'
-      notify: restart docker
+      notify: Restart docker
 
     - name: Enable Docker service
-      systemd:
+      ansible.builtin.systemd:
         name: docker
-        enabled: yes
+        enabled: true
         state: started
 
     - name: Install Docker Compose standalone
-      get_url:
+      ansible.builtin.get_url:
         url: "https://github.com/docker/compose/releases/download/v{{ docker_compose_version }}/docker-compose-linux-{{ ansible_architecture }}"
         dest: /usr/local/bin/docker-compose
         mode: '0755'
@@ -72,45 +72,45 @@
         group: root
 
     - name: Create symbolic link for docker-compose
-      file:
+      ansible.builtin.file:
         src: /usr/local/bin/docker-compose
         dest: /usr/bin/docker-compose
         state: link
 
   handlers:
-    - name: restart docker
-      service:
+    - name: Restart docker
+      ansible.builtin.service:
         name: docker
         state: restarted
 
   post_tasks:
     - name: Verify Docker installation
-      command: docker --version
+      ansible.builtin.command: docker --version
       register: docker_version
       changed_when: false
 
     - name: Verify Docker Compose installation
-      command: docker-compose --version
+      ansible.builtin.command: docker-compose --version
       register: compose_version
       changed_when: false
 
     - name: Display versions
-      debug:
+      ansible.builtin.debug:
         msg:
           - "{{ docker_version.stdout }}"
           - "{{ compose_version.stdout }}"
 
     - name: Test Docker with hello-world
-      docker_container:
+      community.docker.docker_container:
         name: hello-world-test
         image: hello-world
         state: started
-        detach: no
-        cleanup: yes
+        detach: false
+        cleanup: true
       register: hello_world
-      ignore_errors: true
+      failed_when: false
 
     - name: Show Docker test result
-      debug:
+      ansible.builtin.debug:
         msg: "Docker is working correctly!"
       when: hello_world is succeeded

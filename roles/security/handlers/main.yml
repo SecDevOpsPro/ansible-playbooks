@@ -1,16 +1,17 @@
 ---
-- name: restart security services
-  service:
+- name: Restart security services
+  ansible.builtin.service:
     name: "{{ item }}"
     state: restarted
   loop:
     - fail2ban
     - ufw
 
-- name: reload fail2ban
-  service:
+- name: Reload fail2ban
+  ansible.builtin.service:
     name: fail2ban
     state: reloaded
 
-- name: reload ufw
-  command: ufw reload
+- name: Reload ufw
+  ansible.builtin.command: ufw reload
+  changed_when: true

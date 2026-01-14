@@ -19,23 +19,23 @@
 
   tasks:
     - name: Install fail2ban
-      apt:
+      ansible.builtin.apt:
         name: fail2ban
         state: present
         update_cache: true
       when: ansible_os_family == "Debian"
 
     - name: Create fail2ban local configuration
-      template:
-        src: ../templates/fail2ban-jail.local.j2
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/fail2ban-jail.local.j2"
         dest: /etc/fail2ban/jail.local
         owner: root
         group: root
         mode: '0644'
-      notify: restart fail2ban
+      notify: Restart fail2ban
 
     - name: Create fail2ban custom filters directory
-      file:
+      ansible.builtin.file:
         path: /etc/fail2ban/filter.d
         state: directory
         owner: root
@@ -43,39 +43,39 @@
         mode: '0755'
 
     - name: Enable and start fail2ban
-      service:
+      ansible.builtin.service:
         name: fail2ban
         state: started
         enabled: true
 
   handlers:
-    - name: restart fail2ban
-      service:
+    - name: Restart fail2ban
+      ansible.builtin.service:
         name: fail2ban
         state: restarted
 
   post_tasks:
     - name: Verify fail2ban is running
-      service:
+      ansible.builtin.service:
         name: fail2ban
         state: started
 
     - name: Display fail2ban status
-      command: fail2ban-client status
+      ansible.builtin.command: fail2ban-client status
       register: fail2ban_status
       changed_when: false
 
     - name: Show fail2ban jails
-      debug:
+      ansible.builtin.debug:
         var: fail2ban_status.stdout_lines
 
     - name: Display SSH jail status
-      command: fail2ban-client status sshd
+      ansible.builtin.command: fail2ban-client status sshd
       register: sshd_jail
       changed_when: false
       failed_when: false
 
     - name: Show SSH jail details
-      debug:
+      ansible.builtin.debug:
         var: sshd_jail.stdout_lines
       when: sshd_jail.rc == 0

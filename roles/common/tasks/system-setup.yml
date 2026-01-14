@@ -2,7 +2,7 @@
 # Common role - System requirements check and base setup
 
 - name: Check minimum system requirements
-  assert:
+  ansible.builtin.assert:
     that:
       - ansible_memtotal_mb >= 512
       - ansible_processor_vcpus >= 1
@@ -10,25 +10,25 @@
     success_msg: "System requirements met"
 
 - name: Set timezone
-  timezone:
+  community.general.timezone:
     name: "{{ timezone | default('UTC') }}"
 
 - name: Update package cache
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
   when: ansible_os_family == "Debian"
 
 - name: Install common packages
-  package:
+  ansible.builtin.package:
     name: "{{ item }}"
     state: present
   loop: "{{ common_packages }}"
   when: common_packages is defined
 
 - name: Install apt packages
-  apt:
-    name: "{{ apt_packages }}"
+  ansible.builtin.apt:
+    name: "{{ common_apt_packages }}"
     state: present
     autoclean: true
     install_recommends: false
@@ -38,27 +38,27 @@
     - apt_packages | length > 0
 
 - name: Install pip packages
-  pip:
-    name: "{{ pip_packages }}"
+  ansible.builtin.pip:
+    name: "{{ common_pip_packages }}"
     state: present
   when:
     - pip_packages is defined
     - pip_packages | length > 0
 
 - name: Configure NTP (chrony)
-  apt:
+  ansible.builtin.apt:
     name: chrony
     state: present
   when: ansible_os_family == "Debian"
 
 - name: Start and enable chrony
-  service:
+  ansible.builtin.service:
     name: chrony
     state: started
     enabled: true
 
 - name: Configure system limits
-  pam_limits:
+  community.general.pam_limits:
     domain: "{{ item.domain }}"
     limit_type: "{{ item.type }}"
     limit_item: "{{ item.item }}"
@@ -67,12 +67,12 @@
   when: system_limits is defined
 
 - name: Ensure hostname is set
-  hostname:
+  ansible.builtin.hostname:
     name: "{{ inventory_hostname_short }}"
   when: inventory_hostname_short is defined
 
 - name: Update /etc/hosts with hostname
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/hosts
     regexp: '^127\.0\.1\.1'
     line: "127.0.1.1 {{ inventory_hostname_short }}"

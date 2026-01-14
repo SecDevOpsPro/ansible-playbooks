@@ -2,7 +2,7 @@
 # MySQL role tasks
 
 - name: Install MySQL server
-  apt:
+  ansible.builtin.apt:
     name:
       - mysql-server
       - python3-pymysql
@@ -11,42 +11,42 @@
   when: ansible_os_family == "Debian"
 
 - name: Start MySQL service
-  service:
+  ansible.builtin.service:
     name: mysql
     state: started
     enabled: true
 
 - name: Secure MySQL installation
-  mysql_user:
+  community.mysql.mysql_user:
     name: root
     password: "{{ mysql_root_password }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
     state: present
 
 - name: Remove anonymous MySQL users
-  mysql_user:
+  community.mysql.mysql_user:
     name: ''
     host_all: true
     state: absent
     login_unix_socket: /var/run/mysqld/mysqld.sock
 
 - name: Remove MySQL test database
-  mysql_db:
+  community.mysql.mysql_db:
     name: test
     state: absent
     login_unix_socket: /var/run/mysqld/mysqld.sock
 
 - name: Configure MySQL
-  template:
+  ansible.builtin.template:
     src: my.cnf.j2
     dest: /etc/mysql/mysql.conf.d/custom.cnf
     owner: root
     group: root
     mode: '0644'
-  notify: restart mysql
+  notify: Restart mysql
 
 - name: Create backup script
-  template:
+  ansible.builtin.template:
     src: mysql-backup.sh.j2
     dest: /usr/local/bin/mysql-backup.sh
     owner: root

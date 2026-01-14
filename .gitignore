@@ -672,3 +672,4 @@ Temporary Items
 .vault_pass
 !scripts
 .github/*.md
+.ansible

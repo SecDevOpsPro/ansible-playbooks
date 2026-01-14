@@ -2,23 +2,24 @@
 
 - name: DOCKER | Install APT packages
   ansible.builtin.apt:
-    name: "{{ apt_packages }}"
+    name: "{{ docker_apt_packages }}"
     state: present
-    autoclean: yes
-    install_recommends: no
-
+    autoclean: true
+    install_recommends: false
 - name: DOCKER | Configure docker daemon file
   ansible.builtin.copy:
     src: etc/docker/daemon.json
     dest: /etc/docker/daemon.json
     owner: 'root'
-    mode: 0644
+    mode: '0644'
   register: docker_daemon_conf
   notify: DOCKER | restart docker service
 
 - name: DOCKER | get docker-compose binary
   ansible.builtin.get_url:
-    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system | lower }}-{{ ansible_machine | lower }}"
+    url: >
+      https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/
+      docker-compose-{{ ansible_system | lower }}-{{ ansible_machine | lower }}
     dest: /usr/local/bin/docker-compose
     force: true
     mode: '1755'
@@ -27,12 +28,12 @@
   ansible.builtin.copy:
     src: "files/{{ item }}"
     dest: "/etc/systemd/system/{{ item }}"
-    mode: 0644
+    mode: '0644'
     remote_src: false
   loop:
     - docker-cleanup.service
     - docker-cleanup.timer
-  register: systemd
+  register: docker_systemd
 
 - name: DOCKER | Enable docker-cleanup systemd timer unit
   ansible.builtin.systemd:

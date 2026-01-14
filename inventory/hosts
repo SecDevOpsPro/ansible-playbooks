@@ -1,0 +1,24 @@
+# Ansible Inventory
+# Default inventory for CI/CD and local testing
+# For production use, copy inventory/hosts.example and customize
+
+[all:vars]
+ansible_user=ubuntu
+ansible_python_interpreter=/usr/bin/python3
+
+# Localhost for testing
+[localhost]
+127.0.0.1 ansible_connection=local
+
+# Web servers
+[web_servers]
+# Add your web servers here
+
+[app_servers]
+# Add your application servers here
+
+[db_servers]
+# Add your database servers here
+
+[monitoring]
+# Add your monitoring servers here

@@ -1,6 +1,6 @@
 ---
 
-apt_packages:
+common_apt_packages:
   - age
   - apt-transport-https
   - busybox
@@ -27,4 +27,4 @@ apt_packages:
   - uidmap
   - vim
 
-pip_packages: []
+common_pip_packages: []

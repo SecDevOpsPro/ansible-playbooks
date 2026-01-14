@@ -8,12 +8,12 @@
 - name: Base System Configuration
   hosts: all
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   gather_facts: true
 
   pre_tasks:
     - name: Update APT packages
-      apt:
+      ansible.builtin.apt:
         name:
           - busybox
           - python3-pip
@@ -41,19 +41,19 @@
 
   post_tasks:
     - name: Display base setup completion
-      debug:
+      ansible.builtin.debug:
         msg: "Base system configuration completed for {{ inventory_hostname }}"
 
 # Phase 2: Database Servers
 - name: Setup Database Servers
   hosts: db_servers
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   gather_facts: true
 
   pre_tasks:
     - name: Ensure PyMySQL module is installed
-      pip:
+      ansible.builtin.pip:
         name:
           - PyMySQL
           - cryptography
@@ -65,19 +65,19 @@
 
   post_tasks:
     - name: Verify MySQL is accessible
-      command: mysql -e "SELECT VERSION();"
+      ansible.builtin.command: mysql -e "SELECT VERSION();"
       register: mysql_version
       changed_when: false
 
     - name: Display MySQL version
-      debug:
+      ansible.builtin.debug:
         msg: "MySQL installed: {{ mysql_version.stdout }}"
 
 # Phase 3: Load Balancers
 - name: Setup Load Balancers
   hosts: web_servers
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   gather_facts: true
 
   vars:
@@ -88,38 +88,38 @@
 
   tasks:
     - name: Configure NGINX as load balancer
-      template:
+      ansible.builtin.template:
         src: templates/nginx-loadbalancer.conf.j2
         dest: /etc/nginx/sites-available/loadbalancer
         owner: root
         group: root
         mode: '0644'
-      notify: reload nginx
+      notify: Reload nginx
       when: nginx_upstream_servers | length > 0
 
     - name: Enable load balancer configuration
-      file:
+      ansible.builtin.file:
         src: /etc/nginx/sites-available/loadbalancer
         dest: /etc/nginx/sites-enabled/loadbalancer
         state: link
-      notify: reload nginx
+      notify: Reload nginx
       when: nginx_upstream_servers | length > 0
 
   post_tasks:
     - name: Verify NGINX configuration
-      command: nginx -t
+      ansible.builtin.command: nginx -t
       register: nginx_test
       changed_when: false
 
     - name: Display load balancer status
-      debug:
+      ansible.builtin.debug:
         msg: "Load balancer configured with {{ nginx_upstream_servers | length }} upstream servers"
 
 # Phase 4: Application Servers
 - name: Deploy Application Servers
   hosts: app_servers
   become: true
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   gather_facts: true
 
   vars:
@@ -129,7 +129,7 @@
 
   tasks:
     - name: Install application runtime
-      apt:
+      ansible.builtin.apt:
         name:
           - python3
           - python3-pip
@@ -138,14 +138,14 @@
       when: ansible_os_family == "Debian"
 
     - name: Create application user
-      user:
+      ansible.builtin.user:
         name: "{{ app_name }}"
         system: true
         shell: /bin/bash
         create_home: true
 
     - name: Create application directory
-      file:
+      ansible.builtin.file:
         path: "/opt/{{ app_name }}"
         state: directory
         owner: "{{ app_name }}"
@@ -153,7 +153,7 @@
         mode: '0755'
 
     - name: Allow application port through firewall
-      ufw:
+      community.general.ufw:
         rule: allow
         port: "{{ app_port }}"
         proto: tcp
@@ -162,7 +162,7 @@
 
   post_tasks:
     - name: Display application deployment status
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Application: {{ app_name }}"
           - "Port: {{ app_port }}"
@@ -176,7 +176,7 @@
 
   tasks:
     - name: Display deployment summary
-      debug:
+      ansible.builtin.debug:
         msg:
           - "=== Multi-Tier Deployment Summary ==="
           - "Load Balancers: {{ groups['web_servers'] | join(', ') }}"

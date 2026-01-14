@@ -3,5 +3,5 @@
   ansible.builtin.service:
     name: docker
     state: restarted
-    enabled: yes
+    enabled: true
   when: docker_daemon_conf.changed

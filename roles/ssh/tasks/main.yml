@@ -1,5 +1,5 @@
 ---
-- name: SSH | Disable SSH password authentication #TODO
+- name: SSH | Disable SSH password authentication # TODO
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: "^PasswordAuthentication"

@@ -2,7 +2,7 @@
 # Security role tasks
 
 - name: SECURITY | Install security packages
-  apt:
+  ansible.builtin.apt:
     name:
       - ufw
       - fail2ban
@@ -63,8 +63,8 @@
     direction: "{{ item.direction | default(omit) }}"
     logging: "{{ item.logging | default(omit) }}"
     comment: "{{ item.comment | default(omit) }}"
-  loop: "{{ ufw_extra_rules }}"
-  when: ufw_extra_rules is defined and ufw_extra_rules | length > 0
+  loop: "{{ security_ufw_extra_rules }}"
+  when: security_ufw_extra_rules is defined and security_ufw_extra_rules | length > 0
 
 - name: SECURITY | Enable UFW firewall
   community.general.ufw:
@@ -72,13 +72,13 @@
   when: ufw_enabled | default(true)
 
 - name: SECURITY | Configure fail2ban jail
-  template:
+  ansible.builtin.template:
     src: fail2ban-jail.local.j2
     dest: /etc/fail2ban/jail.local
     owner: root
     group: root
     mode: '0644'
-  notify: reload fail2ban
+  notify: Reload fail2ban
   when: fail2ban_enabled | default(true)
 
 - name: SECURITY | Disable SSH password authentication
@@ -88,7 +88,7 @@
     line: "PasswordAuthentication {{ ssh_password_authentication }}"
     state: present
     validate: 'sshd -t -f %s'
-  notify: restart ssh
+  notify: Restart ssh
   when: ssh_password_authentication is defined
 
 - name: SECURITY | Increase SSH LogLevel to VERBOSE
@@ -99,13 +99,13 @@
     insertafter: '^#LogLevel'
     state: present
     validate: 'sshd -t -f %s'
-  notify: restart ssh
+  notify: Restart ssh
 
 - name: SECURITY | Configure automatic security updates
-  template:
+  ansible.builtin.template:
     src: 50unattended-upgrades.j2
     dest: /etc/apt/apt.conf.d/50unattended-upgrades
     owner: root
     group: root
     mode: '0644'
-  when: unattended_upgrades_enabled | default(true)
+  when: security_unattended_upgrades_enabled | default(true)

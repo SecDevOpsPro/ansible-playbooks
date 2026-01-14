@@ -1,6 +1,6 @@
 ---
 
-apt_packages:
+docker_apt_packages:
   - docker-ce
   - docker-ce-cli
   - containerd.io

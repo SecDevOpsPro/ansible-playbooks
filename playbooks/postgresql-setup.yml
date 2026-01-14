@@ -20,13 +20,13 @@
 
   pre_tasks:
     - name: Check if running on supported OS
-      fail:
+      ansible.builtin.fail:
         msg: "This playbook only supports Debian-based systems"
       when: ansible_os_family != "Debian"
 
   tasks:
     - name: Install PostgreSQL dependencies
-      apt:
+      ansible.builtin.apt:
         name:
           - gnupg2
           - postgresql-common
@@ -35,31 +35,33 @@
         update_cache: true
 
     - name: Add PostgreSQL APT repository
-      shell: |
+      ansible.builtin.shell: |
+        set -o pipefail
         sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
         wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
       args:
         creates: /etc/apt/sources.list.d/pgdg.list
+        executable: /bin/bash
 
     - name: Update apt cache
-      apt:
+      ansible.builtin.apt:
         update_cache: true
 
     - name: Install PostgreSQL {{ postgresql_version }}
-      apt:
+      ansible.builtin.apt:
         name:
           - "postgresql-{{ postgresql_version }}"
           - "postgresql-contrib-{{ postgresql_version }}"
         state: present
 
     - name: Ensure PostgreSQL is started and enabled
-      service:
+      ansible.builtin.service:
         name: postgresql
         state: started
         enabled: true
 
     - name: Configure PostgreSQL
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: "/etc/postgresql/{{ postgresql_version }}/main/postgresql.conf"
         regexp: "^#?{{ item.key }}"
         line: "{{ item.key }} = {{ item.value }}"
@@ -72,40 +74,41 @@
         - { key: 'work_mem', value: "'{{ postgresql_work_mem }}'" }
         - { key: 'maintenance_work_mem', value: "'{{ postgresql_maintenance_work_mem }}'" }
         - { key: 'effective_cache_size', value: "'{{ postgresql_effective_cache_size }}'" }
-      notify: restart postgresql
+      notify: Restart postgresql
 
     - name: Configure pg_hba for remote connections
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
         line: "host    all             all             0.0.0.0/0               md5"
         state: present
-      notify: restart postgresql
+      notify: Restart postgresql
 
     - name: Allow PostgreSQL port through firewall
-      ufw:
+      community.general.ufw:
         rule: allow
         port: "{{ postgresql_port }}"
         proto: tcp
 
   handlers:
-    - name: restart postgresql
-      service:
+    - name: Restart postgresql
+      ansible.builtin.service:
         name: postgresql
         state: restarted
 
   post_tasks:
     - name: Verify PostgreSQL is running
-      service:
+      ansible.builtin.service:
         name: postgresql
         state: started
         enabled: true
 
     - name: Display PostgreSQL version
-      command: "psql --version"
+      ansible.builtin.command: "psql --version"
       register: pg_version
       changed_when: false
+      become: true
       become_user: postgres
 
     - name: Show PostgreSQL version
-      debug:
+      ansible.builtin.debug:
         var: pg_version.stdout

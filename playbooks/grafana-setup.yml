@@ -17,7 +17,7 @@
 
   tasks:
     - name: Install Grafana dependencies
-      apt:
+      ansible.builtin.apt:
         name:
           - apt-transport-https
           - software-properties-common
@@ -26,23 +26,23 @@
         update_cache: true
 
     - name: Add Grafana GPG key
-      apt_key:
+      ansible.builtin.apt_key:
         url: https://packages.grafana.com/gpg.key
         state: present
 
     - name: Add Grafana repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "deb https://packages.grafana.com/oss/deb stable main"
         state: present
 
     - name: Install Grafana
-      apt:
+      ansible.builtin.apt:
         name: grafana
         state: present
         update_cache: true
 
     - name: Configure Grafana
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/grafana/grafana.ini
         regexp: "^;?{{ item.key }}"
         line: "{{ item.key }} = {{ item.value }}"
@@ -50,29 +50,29 @@
       loop:
         - { key: 'http_port', value: '{{ grafana_port }}' }
         - { key: 'domain', value: '{{ ansible_fqdn }}' }
-      notify: restart grafana
+      notify: Restart grafana
 
     - name: Enable and start Grafana
-      service:
+      ansible.builtin.service:
         name: grafana-server
         state: started
         enabled: true
 
     - name: Allow Grafana port through firewall
-      ufw:
+      community.general.ufw:
         rule: allow
         port: "{{ grafana_port }}"
         proto: tcp
 
   handlers:
-    - name: restart grafana
-      service:
+    - name: Restart grafana
+      ansible.builtin.service:
         name: grafana-server
         state: restarted
 
   post_tasks:
     - name: Wait for Grafana to be ready
-      uri:
+      ansible.builtin.uri:
         url: "http://localhost:{{ grafana_port }}/api/health"
         method: GET
         status_code: 200
@@ -82,7 +82,7 @@
       delay: 10
 
     - name: Display Grafana access information
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Grafana is available at: http://{{ ansible_default_ipv4.address }}:{{ grafana_port }}"
           - "Default credentials: {{ grafana_admin_user }} / {{ grafana_admin_password }}"

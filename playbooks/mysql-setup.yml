@@ -20,7 +20,7 @@
 
   pre_tasks:
     - name: Check if Ansible Vault is being used
-      fail:
+      ansible.builtin.fail:
         msg: "Please use Ansible Vault for mysql_root_password. Run: ansible-vault encrypt_string 'your_password' --name 'vault_mysql_root_password'"
       when: vault_mysql_root_password is not defined and mysql_root_password == 'ChangeMe123!'
 
@@ -31,7 +31,7 @@
 
   tasks:
     - name: Create application databases
-      mysql_db:
+      community.mysql.mysql_db:
         name: "{{ item.name }}"
         encoding: "{{ item.encoding | default('utf8mb4') }}"
         collation: "{{ item.collation | default('utf8mb4_unicode_ci') }}"
@@ -41,7 +41,7 @@
       no_log: false
 
     - name: Create MySQL users
-      mysql_user:
+      community.mysql.mysql_user:
         name: "{{ item.name }}"
         password: "{{ item.password }}"
         priv: "{{ item.priv }}"
@@ -52,19 +52,19 @@
       no_log: true
 
     - name: Configure MySQL replication (master)
-      include_tasks: tasks/mysql-replication-master.yml
+      ansible.builtin.include_tasks: tasks/mysql-replication-master.yml
       when:
         - mysql_replication_enabled
         - mysql_replication_role == 'master'
 
     - name: Configure MySQL replication (slave)
-      include_tasks: tasks/mysql-replication-slave.yml
+      ansible.builtin.include_tasks: tasks/mysql-replication-slave.yml
       when:
         - mysql_replication_enabled
         - mysql_replication_role == 'slave'
 
     - name: Setup automated backups
-      cron:
+      ansible.builtin.cron:
         name: "MySQL daily backup"
         minute: "0"
         hour: "2"
@@ -74,16 +74,15 @@
 
   post_tasks:
     - name: Verify MySQL is running
-      service:
+      ansible.builtin.service:
         name: mysql
         state: started
-        enabled: yes
-
+        enabled: true
     - name: Display MySQL version
-      command: mysql --version
+      ansible.builtin.command: mysql --version
       register: mysql_version_output
       changed_when: false
 
     - name: Show MySQL version
-      debug:
+      ansible.builtin.debug:
         var: mysql_version_output.stdout

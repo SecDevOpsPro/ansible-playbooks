@@ -2,9 +2,8 @@
   ansible.builtin.package:
     name: ufw
     state: present
-    autoclean: yes
-    install_recommends: no
-
+    autoclean: true
+    install_recommends: false
 - name: FIREWALL | Disable IPv6
   ansible.builtin.lineinfile:
     dest: /etc/default/ufw
@@ -12,7 +11,7 @@
     line: "IPV6=no"
     state: present
     firstmatch: true
-  register: ufw_ipv6_enabled
+  register: firewall_ufw_ipv6_enabled
   when: disable_ufw_ipv6 | bool
 
 - name: FIREWALL | Resets ufw firewall to installation defaults.

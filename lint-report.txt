@@ -1,0 +1,396 @@
+[2mWARNING  Another version of 'ansible.posix' 2.1.0 was found installed in /home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/.venv/lib/python3.14/site-packages/ansible_collections, only the first one will be used, 2.1.0 (/home/daniel/.ansible/collections/ansible_collections).[0m
+[2mWARNING  Another version of 'ansible.utils' 6.0.0 was found installed in /home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/.venv/lib/python3.14/site-packages/ansible_collections, only the first one will be used, 6.0.0 (/home/daniel/.ansible/collections/ansible_collections).[0m
+[2mWARNING  Another version of 'community.general' 12.2.0 was found installed in /home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/.venv/lib/python3.14/site-packages/ansible_collections, only the first one will be used, 12.1.0 (/home/daniel/.ansible/collections/ansible_collections).[0m
+[2mWARNING  Another version of 'community.sops' 2.2.7 was found installed in /home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/.venv/lib/python3.14/site-packages/ansible_collections, only the first one will be used, 2.2.7 (/home/daniel/.ansible/collections/ansible_collections).[0m
+[2mWARNING  Listing 108 violation(s) that are fatal[0m
+Read [34m]8;;https://docs.ansible.com/projects/lint/configuring/#ignoring-rules-for-entire-files\documentation]8;;\[0m for instructions on how to ignore specific rule violations.
+
+# Rule Violation Summary
+
+  2 [34m]8;;https://docs.ansible.com/projects/lint/rules/\load-failure]8;;\[0m [2mprofile:min tags:core,unskippable[0m
+  2 [34m]8;;https://docs.ansible.com/projects/lint/rules/\syntax-check]8;;\[0m [2mprofile:min tags:core,unskippable[0m
+  1 [34m]8;;https://docs.ansible.com/projects/lint/rules/\command-instead-of-module]8;;\[0m [2mprofile:min tags:command-shell,idiom[0m
+  4 [34m]8;;https://docs.ansible.com/projects/lint/rules/\jinja]8;;\[0m [2mprofile:min tags:formatting[0m
+  5 [34m]8;;https://docs.ansible.com/projects/lint/rules/\partial-become]8;;\[0m [2mprofile:min tags:unpredictability[0m
+  4 [34m]8;;https://docs.ansible.com/projects/lint/rules/\schema]8;;\[0m [2mprofile:min tags:core[0m
+  1 [34m]8;;https://docs.ansible.com/projects/lint/rules/\name]8;;\[0m [2mprofile:min tags:idiom[0m
+ 33 [34m]8;;https://docs.ansible.com/projects/lint/rules/\var-naming]8;;\[0m [2mprofile:min tags:idiom[0m
+  5 [34m]8;;https://docs.ansible.com/projects/lint/rules/\yaml]8;;\[0m [2mprofile:min tags:formatting,yaml[0m
+  2 [34m]8;;https://docs.ansible.com/projects/lint/rules/\yaml]8;;\[0m [2mprofile:min tags:formatting,yaml[0m
+  3 [34m]8;;https://docs.ansible.com/projects/lint/rules/\yaml]8;;\[0m [2mprofile:min tags:formatting,yaml[0m
+  2 [34m]8;;https://docs.ansible.com/projects/lint/rules/\name]8;;\[0m [2mprofile:min tags:idiom[0m
+  1 [34m]8;;https://docs.ansible.com/projects/lint/rules/\risky-file-permissions]8;;\[0m [2mprofile:min tags:unpredictability[0m
+  2 [34m]8;;https://docs.ansible.com/projects/lint/rules/\risky-shell-pipe]8;;\[0m [2mprofile:min tags:command-shell[0m
+  3 [34m]8;;https://docs.ansible.com/projects/lint/rules/\no-changed-when]8;;\[0m [2mprofile:min tags:command-shell,idempotency[0m
+  1 [34m]8;;https://docs.ansible.com/projects/lint/rules/\no-handler]8;;\[0m [2mprofile:min tags:idiom[0m
+  2 [34m]8;;https://docs.ansible.com/projects/lint/rules/\no-relative-paths]8;;\[0m [2mprofile:min tags:idiom[0m
+ 19 [34m]8;;https://docs.ansible.com/projects/lint/rules/\fqcn]8;;\[0m [2mprofile:min tags:formatting[0m
+ 14 [34m]8;;https://docs.ansible.com/projects/lint/rules/\fqcn]8;;\[0m [2mprofile:min tags:formatting[0m
+  1 [34m]8;;https://docs.ansible.com/projects/lint/rules/\args]8;;\[0m [2mprofile:min tags:syntax,experimental[0m
+  1 [34m]8;;https://docs.ansible.com/projects/lint/rules/\run-once]8;;\[0m [2mprofile:min tags:idiom[0m
+
+[31m[1mFailed[0m[0m: 103 failure(s), 5 warning(s) in 35 files processed of 35 encountered.
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.docker.docker_container`.[0m
+[35mplaybooks/docker-install.yml[0m:104:7 [2mAction `docker_container` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/no-relative-paths/\no-relative-paths]8;;\[0m[2m:[0m [31mThe src argument should not use a relative path.[0m
+[35mplaybooks/fail2ban-setup.yml[0m:28 [2mTask/Handler: Create fail2ban local configuration[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/fail2ban-setup.yml[0m:64:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/fail2ban-setup.yml[0m:73:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (apt_key).[0m
+[35mplaybooks/grafana-setup.yml[0m:29:7 [2mUse `ansible.builtin.apt_key` or `ansible.legacy.apt_key` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (apt_repository).[0m
+[35mplaybooks/grafana-setup.yml[0m:34:7 [2mUse `ansible.builtin.apt_repository` or `ansible.legacy.apt_repository` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/grafana-setup.yml[0m:62:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/syntax-check/\syntax-check[specific]]8;;\[0m[2m:[0m [31mthe role 'containerd' was not found in /home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/playbooks/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/.ansible/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/playbooks[0m
+[35mplaybooks/kubernetes-node.yml[0m:28:7
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/schema/\schema[playbook]]8;;\[0m[2m:[0m [31m'become_method' must be one of the currently available values: ansible.builtin.runas, ansible.builtin.su, ansible.builtin.sudo, ansible.netcommon.enable, community.general.doas, community.general.dzdo, community.general.ksu, community.general.machinectl, community.general.pbrun, community.general.pfexec, community.general.pmrun, community.general.run0, community.general.sesu, community.general.sudosu, containers.podman.podman_unshare[0m
+[35mplaybooks/multi-tier-app.yml[0m:11:18 [2m Returned errors will not include exact line numbers, but they will mention
+the schema name being used as a tag, like ``schema[playbook]``,
+``schema[tasks]``.
+
+This rule is not skippable and stops further processing of the file.
+
+If incorrect schema was picked, you might want to either:
+
+* move the file to standard location, so its file is detected correctly.
+* use ``kinds:`` option in linter config to help it pick correct file type.
+[/]
+[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/schema/\schema[playbook]]8;;\[0m[2m:[0m [31m'become_method' must be one of the currently available values: ansible.builtin.runas, ansible.builtin.su, ansible.builtin.sudo, ansible.netcommon.enable, community.general.doas, community.general.dzdo, community.general.ksu, community.general.machinectl, community.general.pbrun, community.general.pfexec, community.general.pmrun, community.general.run0, community.general.sesu, community.general.sudosu, containers.podman.podman_unshare[0m
+[35mplaybooks/multi-tier-app.yml[0m:51:18 [2m Returned errors will not include exact line numbers, but they will mention
+the schema name being used as a tag, like ``schema[playbook]``,
+``schema[tasks]``.
+
+This rule is not skippable and stops further processing of the file.
+
+If incorrect schema was picked, you might want to either:
+
+* move the file to standard location, so its file is detected correctly.
+* use ``kinds:`` option in linter config to help it pick correct file type.
+[/]
+[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/multi-tier-app.yml[0m:68:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/schema/\schema[playbook]]8;;\[0m[2m:[0m [31m'become_method' must be one of the currently available values: ansible.builtin.runas, ansible.builtin.su, ansible.builtin.sudo, ansible.netcommon.enable, community.general.doas, community.general.dzdo, community.general.ksu, community.general.machinectl, community.general.pbrun, community.general.pfexec, community.general.pmrun, community.general.run0, community.general.sesu, community.general.sudosu, containers.podman.podman_unshare[0m
+[35mplaybooks/multi-tier-app.yml[0m:80:18 [2m Returned errors will not include exact line numbers, but they will mention
+the schema name being used as a tag, like ``schema[playbook]``,
+``schema[tasks]``.
+
+This rule is not skippable and stops further processing of the file.
+
+If incorrect schema was picked, you might want to either:
+
+* move the file to standard location, so its file is detected correctly.
+* use ``kinds:`` option in linter config to help it pick correct file type.
+[/]
+[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/multi-tier-app.yml[0m:110:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/schema/\schema[playbook]]8;;\[0m[2m:[0m [31m'become_method' must be one of the currently available values: ansible.builtin.runas, ansible.builtin.su, ansible.builtin.sudo, ansible.netcommon.enable, community.general.doas, community.general.dzdo, community.general.ksu, community.general.machinectl, community.general.pbrun, community.general.pfexec, community.general.pmrun, community.general.run0, community.general.sesu, community.general.sudosu, containers.podman.podman_unshare[0m
+[35mplaybooks/multi-tier-app.yml[0m:122:18 [2m Returned errors will not include exact line numbers, but they will mention
+the schema name being used as a tag, like ``schema[playbook]``,
+``schema[tasks]``.
+
+This rule is not skippable and stops further processing of the file.
+
+If incorrect schema was picked, you might want to either:
+
+* move the file to standard location, so its file is detected correctly.
+* use ``kinds:`` option in linter config to help it pick correct file type.
+[/]
+[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/multi-tier-app.yml[0m:156:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (include_tasks).[0m
+[35mplaybooks/mysql-setup.yml[0m:55:7 [2mUse `ansible.builtin.include_tasks` or `ansible.legacy.include_tasks` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (include_tasks).[0m
+[35mplaybooks/mysql-setup.yml[0m:61:7 [2mUse `ansible.builtin.include_tasks` or `ansible.legacy.include_tasks` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/mysql-setup.yml[0m:82:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/syntax-check/\syntax-check[specific]]8;;\[0m[2m:[0m [31mthe role 'certbot' was not found in /home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/playbooks/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/.ansible/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/roles:/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/playbooks[0m
+[35mplaybooks/nginx-setup.yml[0m:30:7
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/command-instead-of-module/\command-instead-of-module]8;;\[0m[2m:[0m [31mcurl used in place of get_url or uri module[0m
+[35mplaybooks/nodejs-app.yml[0m:23 [2mTask/Handler: Install Node.js repository[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/risky-shell-pipe/\risky-shell-pipe]8;;\[0m[2m:[0m [31mShells that use pipes should set the pipefail option.[0m
+[35mplaybooks/nodejs-app.yml[0m:23 [2mTask/Handler: Install Node.js repository[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (shell).[0m
+[35mplaybooks/nodejs-app.yml[0m:24:7 [2mUse `ansible.builtin.shell` or `ansible.legacy.shell` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/partial-become/\partial-become[task]]8;;\[0m[2m:[0m [31m``become_user`` should have a corresponding ``become`` at the same level as itself.[0m
+[35mplaybooks/nodejs-app.yml[0m:57 [2mTask/Handler: Deploy application files[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/partial-become/\partial-become[task]]8;;\[0m[2m:[0m [31m``become_user`` should have a corresponding ``become`` at the same level as itself.[0m
+[35mplaybooks/nodejs-app.yml[0m:68 [2mTask/Handler: Install application dependencies[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/no-relative-paths/\no-relative-paths]8;;\[0m[2m:[0m [31mThe src argument should not use a relative path.[0m
+[35mplaybooks/nodejs-app.yml[0m:75 [2mTask/Handler: Create PM2 ecosystem file[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/no-changed-when/\no-changed-when]8;;\[0m[2m:[0m [31mCommands should not change things if nothing needs doing.[0m
+[35mplaybooks/nodejs-app.yml[0m:84 [2mTask/Handler: Start application with PM2[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/partial-become/\partial-become[task]]8;;\[0m[2m:[0m [31m``become_user`` should have a corresponding ``become`` at the same level as itself.[0m
+[35mplaybooks/nodejs-app.yml[0m:84 [2mTask/Handler: Start application with PM2[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/nodejs-app.yml[0m:85:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/no-changed-when/\no-changed-when]8;;\[0m[2m:[0m [31mCommands should not change things if nothing needs doing.[0m
+[35mplaybooks/nodejs-app.yml[0m:91 [2mTask/Handler: Save PM2 configuration[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/partial-become/\partial-become[task]]8;;\[0m[2m:[0m [31m``become_user`` should have a corresponding ``become`` at the same level as itself.[0m
+[35mplaybooks/nodejs-app.yml[0m:91 [2mTask/Handler: Save PM2 configuration[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/nodejs-app.yml[0m:92:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/no-changed-when/\no-changed-when]8;;\[0m[2m:[0m [31mCommands should not change things if nothing needs doing.[0m
+[35mplaybooks/nodejs-app.yml[0m:96 [2mTask/Handler: Setup PM2 startup script[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/nodejs-app.yml[0m:97:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/nodejs-app.yml[0m:101:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/risky-shell-pipe/\risky-shell-pipe]8;;\[0m[2m:[0m [31mShells that use pipes should set the pipefail option.[0m
+[35mplaybooks/postgresql-setup.yml[0m:37 [2mTask/Handler: Add PostgreSQL APT repository[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (shell).[0m
+[35mplaybooks/postgresql-setup.yml[0m:38:7 [2mUse `ansible.builtin.shell` or `ansible.legacy.shell` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/postgresql-setup.yml[0m:85:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/partial-become/\partial-become[task]]8;;\[0m[2m:[0m [31m``become_user`` should have a corresponding ``become`` at the same level as itself.[0m
+[35mplaybooks/postgresql-setup.yml[0m:103 [2mTask/Handler: Display PostgreSQL version[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/postgresql-setup.yml[0m:104:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[line-length]]8;;\[0m[2m:[0m [31mLine too long (166 > 160 characters)[0m
+[35mplaybooks/prometheus-node-exporter.yml[0m:36
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (unarchive).[0m
+[35mplaybooks/prometheus-node-exporter.yml[0m:41:7 [2mUse `ansible.builtin.unarchive` or `ansible.legacy.unarchive` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/prometheus-node-exporter.yml[0m:72:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/redis-cluster.yml[0m:54:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/redis-cluster.yml[0m:61:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (command).[0m
+[35mplaybooks/redis-cluster.yml[0m:75:7 [2mUse `ansible.builtin.command` or `ansible.legacy.command` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/run-once/\run-once[task]]8;;\[0m[2m:[0m [31mUsing run_once may behave differently if strategy is set to free.[0m
+[35mplaybooks/redis-cluster.yml[0m:80 [2mTask/Handler: Display cluster creation command[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[line-length]]8;;\[0m[2m:[0m [31mLine too long (183 > 160 characters)[0m
+[35mplaybooks/redis-cluster.yml[0m:84
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `ansible.posix.mount`.[0m
+[35mplaybooks/ubuntu-hardening.yml[0m:72:7 [2mAction `mount` is not FQCN.[0m
+[0m
+[33m[34m]8;;https://docs.ansible.com/projects/lint/rules/args/\args[module]]8;;\[0m[2m:[0m [33mvalue of default must be one of: allow, deny, reject, got: {{ item.policy }}[0m [2m[33m(warning)[0m
+[35mplaybooks/ubuntu-hardening.yml[0m:123 [2mTask/Handler: Configure UFW defaults[0m
+[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/ubuntu-hardening.yml[0m:124:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/ubuntu-hardening.yml[0m:132:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.ufw`.[0m
+[35mplaybooks/ubuntu-hardening.yml[0m:138:7 [2mAction `ufw` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use common_ as a prefix. (vars: apt_packages)[0m
+[35mroles/common/defaults/main.yml[0m:2:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use common_ as a prefix. (vars: pip_packages)[0m
+[35mroles/common/defaults/main.yml[0m:3:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use common_ as a prefix. (set_fact: random_password)[0m
+[35mroles/common/tasks/main.yml[0m:2:5 [2mTask/Handler: COMMON| create random but idempotent password[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (import_tasks).[0m
+[35mroles/common/tasks/main.yml[0m:6:3 [2mUse `ansible.builtin.import_tasks` or `ansible.legacy.import_tasks` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/name/\name[missing]]8;;\[0m[2m:[0m [31mAll tasks should be named.[0m
+[35mroles/common/tasks/main.yml[0m:6 [2mTask/Handler: import_tasks packages.yml[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[octal-values]]8;;\[0m[2m:[0m [31mForbidden implicit octal value "0644"[0m
+[35mroles/common/tasks/packages.yml[0m:6
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/risky-file-permissions/\risky-file-permissions]8;;\[0m[2m:[0m [31mFile permissions unset or incorrect.[0m
+[35mroles/common/tasks/packages.yml[0m:22 [2mTask/Handler: Docker -> add Docker repo and apt key[0m
+[0m
+[33m[34m]8;;https://docs.ansible.com/projects/lint/rules/jinja/\jinja[spacing]]8;;\[0m[2m:[0m [33mJinja2 spacing could be improved: https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower}}/gpg -> https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }}/gpg[0m [2m[33m(warning)[0m
+[35mroles/common/tasks/packages.yml[0m:24:14 [2mJinja2 template rewrite recommendation: `https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }}/gpg`.[0m
+[0m[0m
+[33m[34m]8;;https://docs.ansible.com/projects/lint/rules/jinja/\jinja[spacing]]8;;\[0m[2m:[0m [33mJinja2 spacing could be improved: deb [arch=amd64  signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower}} {{ ansible_facts['distribution_release'] }} stable -> deb [arch=amd64  signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} stable[/] [2m[33m(warning)[0m
+[35mroles/common/tasks/packages.yml[0m:30:15 [2mJinja2 template rewrite recommendation: `deb [arch=amd64  signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} stable`.[/]
+[0m[0m[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[line-length]]8;;\[0m[2m:[0m [31mLine too long (205 > 160 characters)[0m
+[35mroles/common/tasks/packages.yml[0m:30
+[0m
+[33m[34m]8;;https://docs.ansible.com/projects/lint/rules/jinja/\jinja[spacing]]8;;\[0m[2m:[0m [33mJinja2 spacing could be improved: deb [arch=arm64  signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower}} {{ ansible_facts['distribution_release'] }} stable -> deb [arch=arm64  signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} stable[/] [2m[33m(warning)[0m
+[35mroles/common/tasks/packages.yml[0m:38:15 [2mJinja2 template rewrite recommendation: `deb [arch=arm64  signed-by=/etc/apt/trusted.gpg.d/docker.asc] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} stable`.[/]
+[0m[0m[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[line-length]]8;;\[0m[2m:[0m [31mLine too long (205 > 160 characters)[0m
+[35mroles/common/tasks/packages.yml[0m:38
+[0m
+[33m[34m]8;;https://docs.ansible.com/projects/lint/rules/jinja/\jinja[spacing]]8;;\[0m[2m:[0m [33mJinja2 spacing could be improved: {{pip_packages }} -> {{ pip_packages }}[0m [2m[33m(warning)[0m
+[35mroles/common/tasks/packages.yml[0m:53:11 [2mJinja2 template rewrite recommendation: `{{ pip_packages }}`.[0m
+[0m[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.timezone`.[0m
+[35mroles/common/tasks/system-setup.yml[0m:13:3 [2mAction `timezone` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action]]8;;\[0m[2m:[0m [31mUse FQCN for module actions, such `community.general.pam_limits`.[0m
+[35mroles/common/tasks/system-setup.yml[0m:61:3 [2mAction `pam_limits` is not FQCN.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/fqcn/\fqcn[action-core]]8;;\[0m[2m:[0m [31mUse FQCN for builtin module actions (hostname).[0m
+[35mroles/common/tasks/system-setup.yml[0m:70:3 [2mUse `ansible.builtin.hostname` or `ansible.legacy.hostname` instead.[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use common_ as a prefix. (vars: apt_packages)[0m
+[35mroles/common/vars/main.yml[0m:3:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use common_ as a prefix. (vars: pip_packages)[0m
+[35mroles/common/vars/main.yml[0m:30:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[octal-values]]8;;\[0m[2m:[0m [31mForbidden implicit octal value "0644"[0m
+[35mroles/docker/tasks/main.yml[0m:14
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[line-length]]8;;\[0m[2m:[0m [31mLine too long (165 > 160 characters)[0m
+[35mroles/docker/tasks/main.yml[0m:20
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use docker_ as a prefix. (register: systemd)[0m
+[35mroles/docker/tasks/main.yml[0m:25:13 [2mTask/Handler: DOCKER | Create docker clean up systemd files[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[octal-values]]8;;\[0m[2m:[0m [31mForbidden implicit octal value "0644"[0m
+[35mroles/docker/tasks/main.yml[0m:29
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/no-handler/\no-handler]8;;\[0m[2m:[0m [31mTasks that run when changed should likely be handlers.[0m
+[35mroles/docker/tasks/main.yml[0m:45:9 [2mTask/Handler: DOCKER | Enable docker-cleanup systemd timer unit[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use docker_ as a prefix. (vars: apt_packages)[0m
+[35mroles/docker/vars/main.yml[0m:3:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use firewall_ as a prefix. (vars: disable_ufw_ipv6)[0m
+[35mroles/firewall/defaults/main.yml[0m:1:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use firewall_ as a prefix. (vars: reset_firewall_defaults)[0m
+[35mroles/firewall/defaults/main.yml[0m:2:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use firewall_ as a prefix. (vars: ufw_extra_rules)[0m
+[35mroles/firewall/defaults/main.yml[0m:3:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[new-line-at-end-of-file]]8;;\[0m[2m:[0m [31mNo new line character at the end of file[0m
+[35mroles/firewall/defaults/main.yml[0m:3
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use firewall_ as a prefix. (register: ufw_ipv6_enabled)[0m
+[35mroles/firewall/tasks/main.yml[0m:7:13 [2mTask/Handler: FIREWALL | Disable IPv6[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use mysql_ as a prefix. (vars: disable_ufw_ipv6)[0m
+[35mroles/mysql/defaults/main.yml[0m:1:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use mysql_ as a prefix. (vars: reset_firewall_defaults)[0m
+[35mroles/mysql/defaults/main.yml[0m:2:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use mysql_ as a prefix. (vars: ufw_extra_rules)[0m
+[35mroles/mysql/defaults/main.yml[0m:3:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/yaml/\yaml[new-line-at-end-of-file]]8;;\[0m[2m:[0m [31mNo new line character at the end of file[0m
+[35mroles/mysql/defaults/main.yml[0m:3
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/name/\name[casing]]8;;\[0m[2m:[0m [31mAll names should start with an uppercase letter.[0m
+[35mroles/mysql/handlers/main.yml[0m:2:9 [2mTask/Handler: restart mysql[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use nginx_ as a prefix. (vars: enable_ssl)[0m
+[35mroles/nginx/defaults/main.yml[0m:11:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use nginx_ as a prefix. (vars: ssl_protocols)[0m
+[35mroles/nginx/defaults/main.yml[0m:12:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use nginx_ as a prefix. (vars: ssl_ciphers)[0m
+[35mroles/nginx/defaults/main.yml[0m:13:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use nginx_ as a prefix. (vars: ssl_prefer_server_ciphers)[0m
+[35mroles/nginx/defaults/main.yml[0m:14:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/name/\name[casing]]8;;\[0m[2m:[0m [31mAll names should start with an uppercase letter.[0m
+[35mroles/nginx/handlers/main.yml[0m:2:9 [2mTask/Handler: reload nginx[0m
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ufw_enabled)[0m
+[35mroles/security/defaults/main.yml[0m:5:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ufw_default_incoming)[0m
+[35mroles/security/defaults/main.yml[0m:6:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ufw_default_outgoing)[0m
+[35mroles/security/defaults/main.yml[0m:7:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: disable_ufw_ipv6)[0m
+[35mroles/security/defaults/main.yml[0m:8:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: reset_firewall_defaults)[0m
+[35mroles/security/defaults/main.yml[0m:9:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: fail2ban_enabled)[0m
+[35mroles/security/defaults/main.yml[0m:12:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: fail2ban_bantime)[0m
+[35mroles/security/defaults/main.yml[0m:13:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: fail2ban_maxretry)[0m
+[35mroles/security/defaults/main.yml[0m:14:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: fail2ban_destemail)[0m
+[35mroles/security/defaults/main.yml[0m:15:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ssh_port)[0m
+[35mroles/security/defaults/main.yml[0m:18:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ssh_permit_root_login)[0m
+[35mroles/security/defaults/main.yml[0m:19:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ssh_password_authentication)[0m
+[35mroles/security/defaults/main.yml[0m:20:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ssh_pubkey_authentication)[0m
+[35mroles/security/defaults/main.yml[0m:21:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ssh_max_auth_tries)[0m
+[35mroles/security/defaults/main.yml[0m:22:1
+[0m
+[31m[34m]8;;https://docs.ansible.com/projects/lint/rules/var-naming/\var-naming[no-role-prefix]]8;;\[0m[2m:[0m [31mVariables names from within roles should use security_ as a prefix. (vars: ssh_max_sessions)[0m
+[35mroles/security/defaults/main.yml[0m:23:1
+[0m
+[33m[34m]8;;https://docs.ansible.com/projects/lint/rules/load-failure/\load-failure[filenotfounderror]]8;;\[0m[2m:[0m [33m[Errno 2] No such file or directory: '/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/tasks/mysql-replication-master.yml'[0m [2m[33m(warning)[0m
+[35mtasks/mysql-replication-master.yml[0m:1
+[0m[0m
+[33m[34m]8;;https://docs.ansible.com/projects/lint/rules/load-failure/\load-failure[filenotfounderror]]8;;\[0m[2m:[0m [33m[Errno 2] No such file or directory: '/home/daniel/C0D3/WORK/SecDevOpsPRO/examples/ansible-playbook-examples/tasks/mysql-replication-slave.yml'[0m [2m[33m(warning)[0m
+[35mtasks/mysql-replication-slave.yml[0m:1
+[0m[0m

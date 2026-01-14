@@ -1,0 +1,52 @@
+---
+# MySQL Replication Slave Configuration
+# This file configures the MySQL server as a replication slave
+
+- name: Configure MySQL slave for replication
+  ansible.builtin.lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: "^#?{{ item.key }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    state: present
+  loop:
+    - { key: 'server-id', value: '{{ mysql_server_id | default(2) }}' }
+    - { key: 'relay-log', value: '/var/log/mysql/mysql-relay-bin.log' }
+    - { key: 'log_bin', value: '/var/log/mysql/mysql-bin.log' }
+    - { key: 'read_only', value: '1' }
+  notify: Restart mysql
+
+- name: Stop slave replication
+  community.mysql.mysql_replication:
+    mode: stopreplica
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  failed_when: false
+
+- name: Configure slave replication
+  community.mysql.mysql_replication:
+    mode: changeprimary
+    primary_host: "{{ mysql_master_host }}"
+    primary_user: "{{ mysql_replication_user | default('repl') }}"
+    primary_password: "{{ mysql_replication_password }}"
+    primary_log_file: "{{ mysql_master_log_file | default('mysql-bin.000001') }}"
+    primary_log_pos: "{{ mysql_master_log_pos | default(0) }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
+
+- name: Start slave replication
+  community.mysql.mysql_replication:
+    mode: startreplica
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Get slave status
+  community.mysql.mysql_replication:
+    mode: getreplica
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  register: slave_status
+
+- name: Display slave status
+  ansible.builtin.debug:
+    msg:
+      - "Slave IO Running: {{ slave_status.Slave_IO_Running | default('Unknown') }}"
+      - "Slave SQL Running: {{ slave_status.Slave_SQL_Running | default('Unknown') }}"
+      - "Seconds Behind Master: {{ slave_status.Seconds_Behind_Master | default('Unknown') }}"
+  when: slave_status is defined

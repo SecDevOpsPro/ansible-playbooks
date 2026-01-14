@@ -1,10 +1,10 @@
 ---
-- name: restart mysql
-  service:
+- name: Restart mysql
+  ansible.builtin.service:
     name: mysql
     state: restarted
 
-- name: reload mysql
-  service:
+- name: Reload mysql
+  ansible.builtin.service:
     name: mysql
     state: reloaded

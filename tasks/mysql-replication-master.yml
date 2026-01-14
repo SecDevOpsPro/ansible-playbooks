@@ -1,0 +1,38 @@
+---
+# MySQL Replication Master Configuration
+# This file configures the MySQL server as a replication master
+
+- name: Configure MySQL master for replication
+  ansible.builtin.lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: "^#?{{ item.key }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    state: present
+  loop:
+    - { key: 'server-id', value: '{{ mysql_server_id | default(1) }}' }
+    - { key: 'log_bin', value: '/var/log/mysql/mysql-bin.log' }
+    - { key: 'binlog_do_db', value: '{{ mysql_replication_database | default("") }}' }
+  notify: Restart mysql
+
+- name: Create replication user
+  community.mysql.mysql_user:
+    name: "{{ mysql_replication_user | default('repl') }}"
+    password: "{{ mysql_replication_password }}"
+    priv: "*.*:REPLICATION SLAVE,REPLICATION CLIENT"
+    host: "%"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  no_log: true
+
+- name: Get master status
+  community.mysql.mysql_replication:
+    mode: getprimary
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  register: master_status
+
+- name: Display master status
+  ansible.builtin.debug:
+    msg:
+      - "Master Log File: {{ master_status.File }}"
+      - "Master Log Position: {{ master_status.Position }}"
+  when: master_status is defined
