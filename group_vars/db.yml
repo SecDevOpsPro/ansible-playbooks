@@ -1,0 +1,46 @@
+---
+# Variables for database servers
+
+# MySQL configuration
+mysql_root_password: "{{ vault_mysql_root_password }}"
+mysql_version: "8.0"
+mysql_bind_address: "0.0.0.0"
+mysql_port: 3306
+mysql_max_connections: 200
+mysql_innodb_buffer_pool_size: "2G"
+mysql_query_cache_size: "64M"
+
+# Databases to create
+mysql_databases:
+  - name: app_production
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_ci
+
+# Database users
+mysql_users:
+  - name: app_user
+    password: "{{ vault_mysql_app_password }}"
+    priv: "app_production.*:ALL"
+    host: "%"
+
+# Backup configuration
+mysql_backup_enabled: true
+mysql_backup_dir: /var/backups/mysql
+mysql_backup_retention_days: 7
+
+# Replication
+mysql_replication_enabled: true
+mysql_replication_user: replicator
+mysql_replication_password: "{{ vault_mysql_replication_password }}"
+
+# PostgreSQL configuration
+postgresql_version: "15"
+postgresql_port: 5432
+postgresql_max_connections: 100
+postgresql_shared_buffers: "256MB"
+
+# Firewall rules
+firewall_allowed_ports:
+  - 22/tcp
+  - 3306/tcp  # MySQL
+  - 5432/tcp  # PostgreSQL

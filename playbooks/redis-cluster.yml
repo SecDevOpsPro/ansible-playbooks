@@ -1,0 +1,85 @@
+---
+# Redis Cluster Setup Playbook
+# Description: Setup Redis cluster with 3 masters and 3 replicas
+# Tested on: Ubuntu 20.04/22.04, Debian 11
+# Author: SecDevOpsPro
+
+- name: Setup Redis Cluster
+  hosts: redis_cluster
+  become: true
+  gather_facts: true
+
+  vars:
+    redis_version: "7.0"
+    redis_port: 6379
+    redis_bind_address: "0.0.0.0"
+    redis_cluster_enabled: true
+    redis_cluster_config_file: "nodes.conf"
+    redis_cluster_node_timeout: 5000
+    redis_maxmemory: "256mb"
+    redis_maxmemory_policy: "allkeys-lru"
+
+  tasks:
+    - name: Install Redis
+      apt:
+        name: redis-server
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    - name: Configure Redis
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^#?{{ item.key }}"
+        line: "{{ item.key }} {{ item.value }}"
+        state: present
+      loop:
+        - { key: 'bind', value: '{{ redis_bind_address }}' }
+        - { key: 'port', value: '{{ redis_port }}' }
+        - { key: 'cluster-enabled', value: 'yes' }
+        - { key: 'cluster-config-file', value: '{{ redis_cluster_config_file }}' }
+        - { key: 'cluster-node-timeout', value: '{{ redis_cluster_node_timeout }}' }
+        - { key: 'maxmemory', value: '{{ redis_maxmemory }}' }
+        - { key: 'maxmemory-policy', value: '{{ redis_maxmemory_policy }}' }
+        - { key: 'appendonly', value: 'yes' }
+      notify: restart redis
+
+    - name: Enable and start Redis
+      service:
+        name: redis-server
+        state: started
+        enabled: true
+
+    - name: Allow Redis port through firewall
+      ufw:
+        rule: allow
+        port: "{{ redis_port }}"
+        proto: tcp
+      when: ansible_os_family == "Debian"
+
+    - name: Allow Redis cluster bus port
+      ufw:
+        rule: allow
+        port: "{{ redis_port | int + 10000 }}"
+        proto: tcp
+      when: ansible_os_family == "Debian"
+
+  handlers:
+    - name: restart redis
+      service:
+        name: redis-server
+        state: restarted
+
+  post_tasks:
+    - name: Verify Redis is running
+      command: redis-cli ping
+      register: redis_ping
+      changed_when: false
+      failed_when: redis_ping.stdout != "PONG"
+
+    - name: Display cluster creation command
+      debug:
+        msg: |
+          To create the Redis cluster, run:
+          redis-cli --cluster create {% for host in groups['redis_cluster'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:{{ redis_port }} {% endfor %}--cluster-replicas 1
+      run_once: true

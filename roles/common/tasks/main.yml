@@ -1,0 +1,6 @@
+---
+- name: COMMON| create random but idempotent password
+  ansible.builtin.set_fact:
+    random_password: "{{ lookup('ansible.builtin.password', '/dev/null', seed=inventory_hostname, chars=['ascii_lowercase', 'digits'], length=16) }}"
+
+- import_tasks: packages.yml

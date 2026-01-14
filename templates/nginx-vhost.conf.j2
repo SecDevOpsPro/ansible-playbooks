@@ -1,0 +1,52 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name {{ domain_name }};
+
+{% if enable_ssl %}
+    # Redirect HTTP to HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{ domain_name }};
+
+    # SSL Configuration
+    ssl_certificate /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+    include /etc/nginx/snippets/ssl-params.conf;
+
+    # Security headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+{% endif %}
+
+    root /var/www/{{ domain_name }};
+    index index.html index.htm index.php;
+
+    # Rate limiting
+    limit_req zone=general burst=20 nodelay;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # PHP-FPM configuration (if needed)
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+    }
+
+    # Deny access to hidden files
+    location ~ /\. {
+        deny all;
+    }
+
+    # Logging
+    access_log /var/log/nginx/{{ domain_name }}_access.log;
+    error_log /var/log/nginx/{{ domain_name }}_error.log;
+}

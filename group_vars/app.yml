@@ -1,0 +1,41 @@
+---
+# Application Server Group Variables
+
+# Node.js settings
+nodejs_version: "18"
+nodejs_major_version: "18.x"
+
+# PM2 settings
+pm2_version: "latest"
+pm2_instances: "max"
+pm2_exec_mode: "cluster"
+pm2_max_memory: "1G"
+pm2_watch: false
+
+# Application settings
+app_name: "nodejs-app"
+app_user: "nodejs"
+app_port: 3000
+app_path: "/opt/nodejs-app"
+app_script: "server.js"
+app_log_dir: "/var/log/nodejs-app"
+
+# Database connection
+db_host: "{{ groups['db_servers'][0] if groups['db_servers'] is defined else 'localhost' }}"
+db_port: 3306
+db_name: "app_production"
+db_user: "app_user"
+db_password: "{{ vault_db_password }}"
+
+# Redis connection
+redis_host: "{{ groups['cache_servers'][0] if groups['cache_servers'] is defined else 'localhost' }}"
+redis_port: 6379
+
+# Deployment settings
+git_repo: "https://github.com/example/nodejs-app.git"
+git_branch: "main"
+deploy_method: "git"  # or "rsync"
+
+# Environment variables
+node_env: "production"
+app_secret_key: "{{ vault_app_secret_key }}"

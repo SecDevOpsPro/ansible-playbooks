@@ -1,0 +1,55 @@
+# Ansible Inventory Example
+# Copy this file to 'hosts' and update with your actual servers
+
+[all:vars]
+ansible_user=ubuntu
+ansible_python_interpreter=/usr/bin/python3
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+
+[web_servers]
+web01 ansible_host=192.168.1.10
+web02 ansible_host=192.168.1.11
+web03 ansible_host=192.168.1.12
+
+[app_servers]
+app01 ansible_host=192.168.1.20
+app02 ansible_host=192.168.1.21
+
+[db_servers]
+db01 ansible_host=192.168.1.30 mysql_replication_role=master
+db02 ansible_host=192.168.1.31 mysql_replication_role=slave
+
+[redis_cluster]
+redis01 ansible_host=192.168.1.40 redis_port=6379 redis_role=master
+redis02 ansible_host=192.168.1.41 redis_port=6379 redis_role=slave
+redis03 ansible_host=192.168.1.42 redis_port=6379 redis_role=master
+redis04 ansible_host=192.168.1.43 redis_port=6379 redis_role=slave
+redis05 ansible_host=192.168.1.44 redis_port=6379 redis_role=master
+redis06 ansible_host=192.168.1.45 redis_port=6379 redis_role=slave
+
+[kubernetes_cluster]
+k8s-master ansible_host=192.168.1.50
+k8s-worker01 ansible_host=192.168.1.51
+k8s-worker02 ansible_host=192.168.1.52
+k8s-worker03 ansible_host=192.168.1.53
+
+[monitoring]
+prometheus ansible_host=192.168.1.60
+grafana ansible_host=192.168.1.61
+
+[elk_stack]
+elasticsearch ansible_host=192.168.1.70
+logstash ansible_host=192.168.1.71
+kibana ansible_host=192.168.1.72
+
+# Group definitions
+[production:children]
+web_servers
+app_servers
+db_servers
+
+[staging:children]
+# Add staging hosts here
+
+[development:children]
+# Add development hosts here

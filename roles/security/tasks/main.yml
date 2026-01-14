@@ -1,0 +1,111 @@
+---
+# Security role tasks
+
+- name: SECURITY | Install security packages
+  apt:
+    name:
+      - ufw
+      - fail2ban
+      - unattended-upgrades
+      - apt-listchanges
+    state: present
+    update_cache: true
+    autoclean: true
+    install_recommends: false
+  when: ansible_os_family == "Debian"
+
+- name: SECURITY | Install firewall package
+  ansible.builtin.package:
+    name: ufw
+    state: present
+    autoclean: true
+    install_recommends: false
+  when: ansible_os_family == "Debian"
+
+- name: SECURITY | Disable IPv6 in UFW
+  ansible.builtin.lineinfile:
+    dest: /etc/default/ufw
+    regexp: "^IPV6=yes"
+    line: "IPV6=no"
+    state: present
+    firstmatch: true
+  when: disable_ufw_ipv6 | default(false)
+
+- name: SECURITY | Reset firewall to defaults
+  community.general.ufw:
+    state: reset
+  when: reset_firewall_defaults | default(false)
+
+- name: SECURITY | Allow SSH traffic
+  community.general.ufw:
+    rule: allow
+    port: "{{ ssh_port | default(22) }}"
+    comment: "Allow SSH access"
+    proto: tcp
+
+- name: SECURITY | Allow all access from RFC1918 networks
+  community.general.ufw:
+    rule: allow
+    src: '{{ item }}'
+    comment: "Allow access from {{ item }} internal RFC1918 network"
+  loop:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+
+- name: SECURITY | Apply extra firewall rules
+  community.general.ufw:
+    rule: "{{ item.rule }}"
+    port: "{{ item.port | default(omit) }}"
+    proto: "{{ item.proto | default(omit) }}"
+    from_ip: "{{ item.from_ip | default(omit) }}"
+    to_ip: "{{ item.to_ip | default(omit) }}"
+    direction: "{{ item.direction | default(omit) }}"
+    logging: "{{ item.logging | default(omit) }}"
+    comment: "{{ item.comment | default(omit) }}"
+  loop: "{{ ufw_extra_rules }}"
+  when: ufw_extra_rules is defined and ufw_extra_rules | length > 0
+
+- name: SECURITY | Enable UFW firewall
+  community.general.ufw:
+    state: enabled
+  when: ufw_enabled | default(true)
+
+- name: SECURITY | Configure fail2ban jail
+  template:
+    src: fail2ban-jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: '0644'
+  notify: reload fail2ban
+  when: fail2ban_enabled | default(true)
+
+- name: SECURITY | Disable SSH password authentication
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication {{ ssh_password_authentication }}"
+    state: present
+    validate: 'sshd -t -f %s'
+  notify: restart ssh
+  when: ssh_password_authentication is defined
+
+- name: SECURITY | Increase SSH LogLevel to VERBOSE
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?LogLevel"
+    line: "LogLevel VERBOSE"
+    insertafter: '^#LogLevel'
+    state: present
+    validate: 'sshd -t -f %s'
+  notify: restart ssh
+
+- name: SECURITY | Configure automatic security updates
+  template:
+    src: 50unattended-upgrades.j2
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    owner: root
+    group: root
+    mode: '0644'
+  when: unattended_upgrades_enabled | default(true)

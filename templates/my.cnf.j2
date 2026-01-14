@@ -1,0 +1,37 @@
+[mysqld]
+# Basic Settings
+bind-address = {{ mysql_bind_address | default('127.0.0.1') }}
+port = {{ mysql_port | default(3306) }}
+max_connections = {{ mysql_max_connections | default(200) }}
+
+# InnoDB Settings
+innodb_buffer_pool_size = {{ mysql_innodb_buffer_pool_size | default('2G') }}
+innodb_log_file_size = {{ mysql_innodb_log_file_size | default('512M') }}
+innodb_flush_method = O_DIRECT
+innodb_file_per_table = 1
+
+# Query Cache
+query_cache_size = {{ mysql_query_cache_size | default('64M') }}
+query_cache_type = 1
+
+# Logging
+log_error = /var/log/mysql/error.log
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql/slow-query.log
+long_query_time = 2
+
+# Binary Logging (for replication)
+{% if mysql_replication_enabled | default(false) %}
+server-id = {{ mysql_server_id | default(1) }}
+log_bin = /var/log/mysql/mysql-bin.log
+binlog_format = ROW
+expire_logs_days = 7
+max_binlog_size = 100M
+{% endif %}
+
+# Security
+local-infile = 0
+
+# Character set
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci

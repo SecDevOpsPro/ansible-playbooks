@@ -1,0 +1,6 @@
+---
+- name: SSH | restart ssh service
+  ansible.builtin.service:
+    name: ssh
+    state: restarted
+  when: ssh_loglevel_verbose.changed or ssh_passwordauthentication_no.changed

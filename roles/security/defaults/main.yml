@@ -1,0 +1,32 @@
+---
+# Security role default variables
+
+# Firewall settings
+ufw_enabled: true
+ufw_default_incoming: deny
+ufw_default_outgoing: allow
+disable_ufw_ipv6: false
+reset_firewall_defaults: false
+
+# Fail2ban settings
+fail2ban_enabled: true
+fail2ban_bantime: 3600
+fail2ban_maxretry: 5
+fail2ban_destemail: root@localhost
+
+# SSH hardening
+ssh_port: 22
+ssh_permit_root_login: "no"
+ssh_password_authentication: "no"
+ssh_pubkey_authentication: "yes"
+ssh_max_auth_tries: 3
+ssh_max_sessions: 10
+
+# Automatic updates
+unattended_upgrades_enabled: true
+
+# Audit logging
+auditd_enabled: true
+
+# Extra firewall rules
+ufw_extra_rules: []

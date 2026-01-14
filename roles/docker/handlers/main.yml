@@ -1,0 +1,7 @@
+---
+- name: DOCKER | restart docker service
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+    enabled: yes
+  when: docker_daemon_conf.changed

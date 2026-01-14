@@ -1,0 +1,81 @@
+---
+# Fail2ban Setup Playbook
+# Description: Install and configure fail2ban for intrusion prevention
+# Tested on: Ubuntu 20.04/22.04, Debian 11
+# Author: SecDevOpsPro
+
+- name: Setup Fail2ban Intrusion Prevention
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    fail2ban_bantime: 3600
+    fail2ban_findtime: 600
+    fail2ban_maxretry: 5
+    fail2ban_destemail: root@localhost
+    fail2ban_sendername: "Fail2Ban"
+    fail2ban_action: "%(action_mwl)s"
+
+  tasks:
+    - name: Install fail2ban
+      apt:
+        name: fail2ban
+        state: present
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    - name: Create fail2ban local configuration
+      template:
+        src: ../templates/fail2ban-jail.local.j2
+        dest: /etc/fail2ban/jail.local
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart fail2ban
+
+    - name: Create fail2ban custom filters directory
+      file:
+        path: /etc/fail2ban/filter.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Enable and start fail2ban
+      service:
+        name: fail2ban
+        state: started
+        enabled: true
+
+  handlers:
+    - name: restart fail2ban
+      service:
+        name: fail2ban
+        state: restarted
+
+  post_tasks:
+    - name: Verify fail2ban is running
+      service:
+        name: fail2ban
+        state: started
+
+    - name: Display fail2ban status
+      command: fail2ban-client status
+      register: fail2ban_status
+      changed_when: false
+
+    - name: Show fail2ban jails
+      debug:
+        var: fail2ban_status.stdout_lines
+
+    - name: Display SSH jail status
+      command: fail2ban-client status sshd
+      register: sshd_jail
+      changed_when: false
+      failed_when: false
+
+    - name: Show SSH jail details
+      debug:
+        var: sshd_jail.stdout_lines
+      when: sshd_jail.rc == 0

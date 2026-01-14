@@ -1,0 +1,35 @@
+---
+# Example vault file - ENCRYPTED VERSION
+# This file should be encrypted with: ansible-vault encrypt group_vars/production/vault.yml
+
+# Database passwords
+vault_mysql_root_password: "MySuperSecretRootPassword123!"
+vault_mysql_replication_password: "ReplicationPassword456!"
+vault_db_password: "AppDatabasePassword789!"
+
+# Redis password
+vault_redis_password: "RedisSecurePassword321!"
+
+# Application secrets
+vault_app_secret_key: "YourApplicationSecretKeyHere12345678901234567890"
+vault_jwt_secret: "JWTSecretForTokenEncryption9876543210"
+
+# Grafana credentials
+vault_grafana_admin_password: "GrafanaAdminPassword654!"
+
+# SSL certificate password (if applicable)
+vault_ssl_key_password: "SSLKeyPassword987!"
+
+# API keys
+vault_sendgrid_api_key: "SG.xxxxxxxxxxxxxxxxxxxxx"
+vault_aws_access_key: "AKIAXXXXXXXXXXXXX"
+vault_aws_secret_key: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# Backup credentials
+vault_backup_encryption_password: "BackupEncryptionPassword111!"
+
+# Monitoring credentials
+vault_prometheus_basic_auth_password: "PrometheusPassword222!"
+
+# SMTP credentials
+vault_smtp_password: "SmtpPassword333!"

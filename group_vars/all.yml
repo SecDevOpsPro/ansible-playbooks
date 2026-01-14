@@ -1,0 +1,49 @@
+---
+# Global variables for all hosts
+
+# Timezone
+timezone: "UTC"
+
+# NTP servers
+ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+
+# Security settings
+ssh_port: 22
+ssh_permit_root_login: "no"
+ssh_password_authentication: "no"
+ssh_pubkey_authentication: "yes"
+
+# Common packages
+common_packages:
+  - vim
+  - git
+  - curl
+  - wget
+  - htop
+  - net-tools
+  - ufw
+  - fail2ban
+  - unattended-upgrades
+
+# Firewall defaults
+firewall_allowed_ports:
+  - 22/tcp  # SSH
+
+# Log rotation
+logrotate_frequency: daily
+logrotate_retention: 14
+
+# System limits
+system_limits:
+  - domain: '*'
+    type: soft
+    item: nofile
+    value: 65536
+  - domain: '*'
+    type: hard
+    item: nofile
+    value: 65536

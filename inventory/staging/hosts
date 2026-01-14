@@ -1,0 +1,11 @@
+# Staging Inventory
+
+[all:vars]
+ansible_user=ubuntu
+environment=staging
+
+[web_servers]
+web-stg-01 ansible_host=10.0.101.10
+
+[db_servers]
+db-stg-01 ansible_host=10.0.102.10

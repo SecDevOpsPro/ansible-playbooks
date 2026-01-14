@@ -1,0 +1,111 @@
+---
+# PostgreSQL 15 Setup Playbook
+# Description: Install PostgreSQL 15 with streaming replication support
+# Tested on: Ubuntu 20.04/22.04, Debian 11
+# Author: SecDevOpsPro
+
+- name: Setup PostgreSQL 15 with replication
+  hosts: db_servers
+  become: true
+  gather_facts: true
+
+  vars:
+    postgresql_version: "15"
+    postgresql_port: 5432
+    postgresql_max_connections: 100
+    postgresql_shared_buffers: "256MB"
+    postgresql_work_mem: "4MB"
+    postgresql_maintenance_work_mem: "64MB"
+    postgresql_effective_cache_size: "1GB"
+
+  pre_tasks:
+    - name: Check if running on supported OS
+      fail:
+        msg: "This playbook only supports Debian-based systems"
+      when: ansible_os_family != "Debian"
+
+  tasks:
+    - name: Install PostgreSQL dependencies
+      apt:
+        name:
+          - gnupg2
+          - postgresql-common
+          - python3-psycopg2
+        state: present
+        update_cache: true
+
+    - name: Add PostgreSQL APT repository
+      shell: |
+        sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+      args:
+        creates: /etc/apt/sources.list.d/pgdg.list
+
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+    - name: Install PostgreSQL {{ postgresql_version }}
+      apt:
+        name:
+          - "postgresql-{{ postgresql_version }}"
+          - "postgresql-contrib-{{ postgresql_version }}"
+        state: present
+
+    - name: Ensure PostgreSQL is started and enabled
+      service:
+        name: postgresql
+        state: started
+        enabled: true
+
+    - name: Configure PostgreSQL
+      lineinfile:
+        path: "/etc/postgresql/{{ postgresql_version }}/main/postgresql.conf"
+        regexp: "^#?{{ item.key }}"
+        line: "{{ item.key }} = {{ item.value }}"
+        state: present
+      loop:
+        - { key: 'listen_addresses', value: "'*'" }
+        - { key: 'port', value: "{{ postgresql_port }}" }
+        - { key: 'max_connections', value: "{{ postgresql_max_connections }}" }
+        - { key: 'shared_buffers', value: "'{{ postgresql_shared_buffers }}'" }
+        - { key: 'work_mem', value: "'{{ postgresql_work_mem }}'" }
+        - { key: 'maintenance_work_mem', value: "'{{ postgresql_maintenance_work_mem }}'" }
+        - { key: 'effective_cache_size', value: "'{{ postgresql_effective_cache_size }}'" }
+      notify: restart postgresql
+
+    - name: Configure pg_hba for remote connections
+      lineinfile:
+        path: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
+        line: "host    all             all             0.0.0.0/0               md5"
+        state: present
+      notify: restart postgresql
+
+    - name: Allow PostgreSQL port through firewall
+      ufw:
+        rule: allow
+        port: "{{ postgresql_port }}"
+        proto: tcp
+
+  handlers:
+    - name: restart postgresql
+      service:
+        name: postgresql
+        state: restarted
+
+  post_tasks:
+    - name: Verify PostgreSQL is running
+      service:
+        name: postgresql
+        state: started
+        enabled: true
+
+    - name: Display PostgreSQL version
+      command: "psql --version"
+      register: pg_version
+      changed_when: false
+      become_user: postgres
+
+    - name: Show PostgreSQL version
+      debug:
+        var: pg_version.stdout

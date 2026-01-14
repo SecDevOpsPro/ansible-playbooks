@@ -1,0 +1,30 @@
+---
+# Variables for web servers
+
+# NGINX configuration
+nginx_user: www-data
+nginx_worker_processes: auto
+nginx_worker_connections: 2048
+nginx_keepalive_timeout: 65
+nginx_client_max_body_size: 100M
+
+# TLS/SSL
+ssl_certificate_provider: letsencrypt
+ssl_protocols: "TLSv1.2 TLSv1.3"
+ssl_ciphers: "ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384"
+ssl_prefer_server_ciphers: "on"
+
+# Application settings
+app_root: /var/www/html
+app_user: www-data
+app_group: www-data
+
+# Firewall rules
+firewall_allowed_ports:
+  - 22/tcp
+  - 80/tcp
+  - 443/tcp
+
+# Rate limiting
+nginx_rate_limit_zone: "10m"
+nginx_rate_limit_requests: "100r/s"

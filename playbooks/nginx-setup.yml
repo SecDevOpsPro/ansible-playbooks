@@ -1,0 +1,102 @@
+---
+# NGINX Setup Playbook
+# Description: Install and configure NGINX with TLS/SSL support
+# Tested on: Ubuntu 20.04/22.04, Debian 11
+# Author: SecDevOpsPro
+
+- name: Setup NGINX with TLS
+  hosts: web_servers
+  become: true
+  gather_facts: true
+
+  vars:
+    nginx_version: "1.24"
+    domain_name: "example.com"
+    enable_ssl: true
+    ssl_provider: "letsencrypt"
+    certbot_email: "admin@{{ domain_name }}"
+    nginx_vhost_template: "nginx-vhost.conf.j2"
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+  roles:
+    - common
+    - nginx
+    - { role: certbot, when: enable_ssl and ssl_provider == "letsencrypt" }
+    - security
+
+  tasks:
+    - name: Create application directory
+      file:
+        path: "/var/www/{{ domain_name }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+
+    - name: Deploy default index page
+      template:
+        src: templates/index.html.j2
+        dest: "/var/www/{{ domain_name }}/index.html"
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      notify: reload nginx
+
+    - name: Configure NGINX virtual host
+      template:
+        src: "templates/{{ nginx_vhost_template }}"
+        dest: "/etc/nginx/sites-available/{{ domain_name }}"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: reload nginx
+
+    - name: Enable NGINX virtual host
+      file:
+        src: "/etc/nginx/sites-available/{{ domain_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+        state: link
+      notify: reload nginx
+
+    - name: Remove default NGINX site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: reload nginx
+
+    - name: Test NGINX configuration
+      command: nginx -t
+      changed_when: false
+      register: nginx_test
+
+    - name: Display NGINX test results
+      debug:
+        var: nginx_test.stderr_lines
+
+  handlers:
+    - name: reload nginx
+      service:
+        name: nginx
+        state: reloaded
+
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+  post_tasks:
+    - name: Verify NGINX is running
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Display SSL certificate status
+      debug:
+        msg: "SSL certificate {{ 'enabled' if enable_ssl else 'disabled' }} for {{ domain_name }}"

@@ -1,0 +1,19 @@
+---
+- name: SSH | Disable SSH password authentication #TODO
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  register: ssh_passwordauthentication_no
+  notify: SSH | restart ssh service
+
+- name: SSH | increase LogLevel to VERBOSE
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LogLevel"
+    line: "LogLevel VERBOSE"
+    insertafter: '^#LogLevel '
+    state: present
+  register: ssh_loglevel_verbose
+  notify: SSH | restart ssh service

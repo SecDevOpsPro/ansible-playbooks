@@ -1,0 +1,112 @@
+---
+# Kubernetes Node Preparation Playbook
+# Description: Prepare nodes for Kubernetes cluster deployment
+# Tested on: Ubuntu 20.04/22.04
+# Author: SecDevOpsPro
+
+- name: Prepare Kubernetes nodes
+  hosts: kubernetes_cluster
+  become: true
+  gather_facts: true
+
+  vars:
+    kubernetes_version: "1.28"
+    containerd_version: "1.7"
+    pod_network_cidr: "10.244.0.0/16"
+    disable_swap: true
+
+  pre_tasks:
+    - name: Check system requirements
+      assert:
+        that:
+          - ansible_memtotal_mb >= 2048
+          - ansible_processor_vcpus >= 2
+        fail_msg: "Minimum requirements: 2 CPU cores and 2GB RAM"
+
+  roles:
+    - common
+    - containerd
+
+  tasks:
+    - name: Disable swap
+      command: swapoff -a
+      when: disable_swap
+
+    - name: Remove swap from /etc/fstab
+      lineinfile:
+        path: /etc/fstab
+        regexp: '^([^#].*\s+swap\s+.*)$'
+        line: '# \1'
+        backrefs: yes
+      when: disable_swap
+
+    - name: Load kernel modules
+      modprobe:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - overlay
+        - br_netfilter
+
+    - name: Ensure kernel modules load on boot
+      copy:
+        content: |
+          overlay
+          br_netfilter
+        dest: /etc/modules-load.d/kubernetes.conf
+        mode: '0644'
+
+    - name: Configure sysctl for Kubernetes
+      sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        sysctl_file: /etc/sysctl.d/kubernetes.conf
+        reload: yes
+      loop:
+        - { key: 'net.bridge.bridge-nf-call-iptables', value: '1' }
+        - { key: 'net.bridge.bridge-nf-call-ip6tables', value: '1' }
+        - { key: 'net.ipv4.ip_forward', value: '1' }
+
+    - name: Add Kubernetes apt key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Kubernetes repository
+      apt_repository:
+        repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install Kubernetes packages
+      apt:
+        name:
+          - kubelet={{ kubernetes_version }}.*
+          - kubeadm={{ kubernetes_version }}.*
+          - kubectl={{ kubernetes_version }}.*
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Hold Kubernetes packages at current version
+      dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+      when: ansible_os_family == "Debian"
+
+    - name: Enable kubelet service
+      systemd:
+        name: kubelet
+        enabled: yes
+        state: started
+
+  post_tasks:
+    - name: Display node status
+      debug:
+        msg: "Node prepared for Kubernetes {{ kubernetes_version }}. Ready for cluster initialization."

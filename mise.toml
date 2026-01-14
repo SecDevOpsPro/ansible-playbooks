@@ -1,0 +1,23 @@
+[tools]
+pnpm = "latest"
+age = "latest"
+pipx = "latest"
+python = { version='3', virtualenv='.venv' }
+uv = { version='latest', install_env = { python = true } }
+
+[settings]
+experimental = true
+python.uv_venv_auto = true
+
+[env]
+# Use the project name derived from the current directory
+PROJECT_NAME = "{{ config_root | basename }}"
+ANSIBLE_VAULT_PASSWORD_FILE = "{{ config_root }}/.vault_pass"
+ANSIBLE_CONFIG = "{{ config_root }}/ansible.cfg"
+
+GIT_ASKPASS="/usr/bin/ksshaskpass"
+SSH_ASKPASS="/usr/bin/ksshaskpass"
+SSH_ASKPASS_REQUIRE="prefer"
+
+# Automatic virtualenv activation
+_.python.venv = { path = ".venv", create = true }

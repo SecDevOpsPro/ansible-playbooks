@@ -1,0 +1,56 @@
+- name: FIREWALL | Install firewall package
+  ansible.builtin.package:
+    name: ufw
+    state: present
+    autoclean: yes
+    install_recommends: no
+
+- name: FIREWALL | Disable IPv6
+  ansible.builtin.lineinfile:
+    dest: /etc/default/ufw
+    regexp: "^IPV6=yes"
+    line: "IPV6=no"
+    state: present
+    firstmatch: true
+  register: ufw_ipv6_enabled
+  when: disable_ufw_ipv6 | bool
+
+- name: FIREWALL | Resets ufw firewall to installation defaults.
+  community.general.ufw:
+    state: reset
+  when: reset_firewall_defaults | bool
+
+- name: FIREWALL | Allow SSH traffic
+  community.general.ufw:
+    rule: allow
+    port: "22"
+    comment: "Allow access SSH"
+    proto: tcp
+
+- name: FIREWALL | Allow all access from RFC1918 networks to this host
+  community.general.ufw:
+    rule: allow
+    src: '{{ item }}'
+    comment: "Allow access from {{ item }} internal RFC1918 network"
+  loop:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+
+- name: FIREWALL | Extra rules
+  community.general.ufw: # https://docs.ansible.com/ansible/latest/collections/community/general/ufw_module.html
+    rule: "{{ item.rule }}"
+    port: "{{ item.port | default(omit) }}"
+    proto: "{{ item.proto | default(omit) }}"
+    from_ip: "{{ item.from_ip | default(omit) }}"
+    to_ip: "{{ item.to_ip | default(omit) }}"
+    direction: "{{ item.direction | default(omit) }}"
+    logging: "{{ item.logging | default(omit) }}"
+    comment: "{{ item.comment | default(omit) }}"
+  with_items: "{{ ufw_extra_rules }}"
+
+- name: FIREWALL | Set ufw firewall policy
+  community.general.ufw:
+    state: enabled
+    direction: incoming
+    policy: deny

@@ -1,0 +1,30 @@
+---
+
+apt_packages:
+  - age
+  - apt-transport-https
+  - busybox
+  - byobu
+  - ca-certificates
+  - colordiff
+  - curl
+  - dbus-user-session
+  - git
+  - htop
+  - iproute2
+  - iputils-ping
+  - jq
+  - mc
+  - mtr-tiny
+  - nano
+  - psmisc
+  - python3-pip
+  - rsync
+  - socat
+  - strace
+  - sysstat
+  - tmux
+  - uidmap
+  - vim
+
+pip_packages: []

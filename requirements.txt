@@ -1,0 +1,7 @@
+ansible
+ansible-lint
+bcrypt
+jmespath
+netaddr
+openshift
+passlib

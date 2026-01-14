@@ -1,0 +1,115 @@
+---
+# Node.js Application Deployment Playbook
+# Description: Deploy Node.js application with PM2 process manager
+# Tested on: Ubuntu 20.04/22.04, Debian 11
+# Author: SecDevOpsPro
+
+- name: Deploy Node.js Application with PM2
+  hosts: app_servers
+  become: true
+  gather_facts: true
+
+  vars:
+    nodejs_version: "18"
+    app_name: "myapp"
+    app_user: "nodeapp"
+    app_group: "nodeapp"
+    app_directory: "/opt/{{ app_name }}"
+    app_port: 3000
+    pm2_instances: "max"
+    pm2_exec_mode: "cluster"
+
+  tasks:
+    - name: Install Node.js repository
+      shell: curl -fsSL https://deb.nodesource.com/setup_{{ nodejs_version }}.x | bash -
+      args:
+        creates: /etc/apt/sources.list.d/nodesource.list
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+        update_cache: true
+
+    - name: Install PM2 globally
+      npm:
+        name: pm2
+        global: true
+        state: present
+
+    - name: Create application user
+      user:
+        name: "{{ app_user }}"
+        group: "{{ app_group }}"
+        system: true
+        shell: /bin/bash
+        create_home: true
+        home: "{{ app_directory }}"
+
+    - name: Create application directory
+      file:
+        path: "{{ app_directory }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0755'
+
+    - name: Deploy application files
+      synchronize:
+        src: "{{ playbook_dir }}/../app/"
+        dest: "{{ app_directory }}/"
+        delete: true
+        rsync_opts:
+          - "--exclude=node_modules"
+          - "--exclude=.git"
+      become_user: "{{ app_user }}"
+      when: false  # Set to true when app directory exists
+
+    - name: Install application dependencies
+      npm:
+        path: "{{ app_directory }}"
+        state: present
+      become_user: "{{ app_user }}"
+      when: false  # Set to true when package.json exists
+
+    - name: Create PM2 ecosystem file
+      template:
+        src: ../templates/ecosystem.config.js.j2
+        dest: "{{ app_directory }}/ecosystem.config.js"
+        owner: "{{ app_user }}"
+        group: "{{ app_group }}"
+        mode: '0644'
+      when: false  # Create template first
+
+    - name: Start application with PM2
+      command: pm2 start ecosystem.config.js
+      args:
+        chdir: "{{ app_directory }}"
+      become_user: "{{ app_user }}"
+      when: false  # Set to true when ready
+
+    - name: Save PM2 configuration
+      command: pm2 save
+      become_user: "{{ app_user }}"
+      when: false  # Set to true when ready
+
+    - name: Setup PM2 startup script
+      command: pm2 startup systemd -u {{ app_user }} --hp {{ app_directory }}
+      when: false  # Set to true when ready
+
+    - name: Allow application port through firewall
+      ufw:
+        rule: allow
+        port: "{{ app_port }}"
+        proto: tcp
+
+  post_tasks:
+    - name: Display deployment information
+      debug:
+        msg:
+          - "Application deployed to: {{ app_directory }}"
+          - "Running as user: {{ app_user }}"
+          - "Port: {{ app_port }}"
+          - "PM2 instances: {{ pm2_instances }}"
+          - "Check status: sudo -u {{ app_user }} pm2 status"
+          - "View logs: sudo -u {{ app_user }} pm2 logs {{ app_name }}"

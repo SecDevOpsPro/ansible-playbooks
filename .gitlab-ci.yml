@@ -1,0 +1,83 @@
+stages:
+  - lint
+  - test
+  - deploy
+
+variables:
+  ANSIBLE_FORCE_COLOR: "true"
+  ANSIBLE_HOST_KEY_CHECKING: "false"
+
+# Lint Ansible playbooks
+ansible:lint:
+  stage: lint
+  image: cytopia/ansible-lint:latest
+  script:
+    - ansible-lint playbooks/*.yml
+    - ansible-lint roles/*/tasks/*.yml
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Syntax check
+ansible:syntax-check:
+  stage: lint
+  image: cytopia/ansible:latest
+  script:
+    - for playbook in playbooks/*.yml; do ansible-playbook --syntax-check "$playbook"; done
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Molecule test (if configured)
+ansible:test:
+  stage: test
+  image: cytopia/ansible:latest
+  before_script:
+    - pip install molecule molecule-docker docker
+  script:
+    - cd roles/nginx && molecule test
+  only:
+    - merge_requests
+    - main
+  allow_failure: true
+
+# Deploy to staging
+deploy:staging:
+  stage: deploy
+  image: cytopia/ansible:latest
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    - ansible-playbook -i inventory/staging playbooks/deploy-app.yml --vault-password-file <(echo "$ANSIBLE_VAULT_PASSWORD")
+  environment:
+    name: staging
+    url: https://staging.example.com
+  only:
+    - develop
+  when: manual
+
+# Deploy to production
+deploy:production:
+  stage: deploy
+  image: cytopia/ansible:latest
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    - ansible-playbook -i inventory/production playbooks/deploy-app.yml --vault-password-file <(echo "$ANSIBLE_VAULT_PASSWORD")
+  environment:
+    name: production
+    url: https://example.com
+  only:
+    - main
+  when: manual
+  needs:
+    - ansible:lint
+    - ansible:syntax-check

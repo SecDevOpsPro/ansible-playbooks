@@ -1,0 +1,11 @@
+---
+
+apt_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - open-iscsi
+  - nfs-common
+  - lvm2
+
+docker_compose_version: v5.0.1

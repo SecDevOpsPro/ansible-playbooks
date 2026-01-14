@@ -1,0 +1,14 @@
+# Production Inventory
+# Sensitive - DO NOT COMMIT to public repositories
+
+[all:vars]
+ansible_user=deploy
+environment=production
+
+[web_servers]
+web-prod-01 ansible_host=10.0.1.10
+web-prod-02 ansible_host=10.0.1.11
+
+[db_servers]
+db-prod-01 ansible_host=10.0.2.10 mysql_replication_role=master
+db-prod-02 ansible_host=10.0.2.11 mysql_replication_role=slave
