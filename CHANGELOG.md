@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-01-14
 
 ### Added
+
 - Initial release with 20+ production-ready Ansible playbooks
 - Web server playbooks: NGINX, Apache, NGINX+PHP-FPM
 - Database playbooks: MySQL 8.0, PostgreSQL 15, Redis cluster
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CIS compliance playbooks for Ubuntu 20.04/22.04
 
 ### Security
+
 - All playbooks implement idempotency and security best practices
 - SSH hardening with key-based authentication only
 - Firewall configuration with minimal exposed ports
@@ -33,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Audit logging enabled
 
 ### Documentation
+
 - Comprehensive README with usage examples
 - Role-specific documentation
 - CI/CD integration guides
@@ -42,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
+
 - Additional cloud provider playbooks (AWS, Azure, GCP)
 - Multi-cloud Terraform integration
 - HashiCorp Vault integration
