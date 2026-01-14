@@ -42,7 +42,7 @@
       when: disable_swap
 
     - name: Load kernel modules
-      modprobe:
+      community.general.modprobe:
         name: "{{ item }}"
         state: present
       loop:
@@ -70,13 +70,13 @@
         - { key: 'net.ipv4.ip_forward', value: '1' }
 
     - name: Add Kubernetes apt key
-      apt_key:
+      ansible.builtin.apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
       when: ansible_os_family == "Debian"
 
     - name: Add Kubernetes repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
         state: present
       when: ansible_os_family == "Debian"
@@ -92,7 +92,7 @@
       when: ansible_os_family == "Debian"
 
     - name: Hold Kubernetes packages at current version
-      dpkg_selections:
+      ansible.builtin.dpkg_selections:
         name: "{{ item }}"
         selection: hold
       loop:

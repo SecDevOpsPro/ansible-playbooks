@@ -79,7 +79,7 @@
 
     - name: Create PM2 ecosystem file
       ansible.builtin.template:
-        src: "{{ playbook_dir }}/../templates/ecosystem.config.js.j2"
+        src: ecosystem.config.js.j2
         dest: "{{ app_directory }}/ecosystem.config.js"
         owner: "{{ app_user }}"
         group: "{{ app_group }}"

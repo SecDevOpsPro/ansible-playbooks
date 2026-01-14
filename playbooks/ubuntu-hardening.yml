@@ -120,13 +120,15 @@
         name: ufw
         state: present
 
-    - name: Configure UFW defaults
+    - name: Configure UFW default incoming policy
       community.general.ufw:
-        direction: "{{ item.direction }}"
-        policy: "{{ item.policy }}"
-      loop:
-        - { direction: 'incoming', policy: 'deny' }
-        - { direction: 'outgoing', policy: 'allow' }
+        direction: incoming
+        policy: deny
+
+    - name: Configure UFW default outgoing policy
+      community.general.ufw:
+        direction: outgoing
+        policy: allow
 
     - name: Allow SSH through firewall
       community.general.ufw:

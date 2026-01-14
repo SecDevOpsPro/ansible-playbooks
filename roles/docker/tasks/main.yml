@@ -44,4 +44,4 @@
   loop:
     - docker-cleanup.service
     - docker-cleanup.timer
-  when: systemd.changed
+  notify: Enable docker cleanup timer

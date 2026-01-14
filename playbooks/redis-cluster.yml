@@ -86,4 +86,4 @@
           {{ hostvars[host]['ansible_default_ipv4']['address'] }}:{{ redis_port }}
           {% endfor %}
           --cluster-replicas 1
-      run_once: true
+      run_once: true  # noqa: run-once[task]

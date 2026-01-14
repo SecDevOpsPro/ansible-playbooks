@@ -5,3 +5,10 @@
     state: restarted
     enabled: true
   when: docker_daemon_conf.changed
+
+- name: Enable docker cleanup timer
+  ansible.builtin.systemd:
+    name: docker-cleanup.timer
+    enabled: true
+    state: started
+    daemon_reload: true

@@ -71,7 +71,7 @@
       notify: Reload nginx
 
     - name: Test NGINX configuration
-      command: nginx -t
+      ansible.builtin.command: nginx -t
       changed_when: false
       register: nginx_test
 
